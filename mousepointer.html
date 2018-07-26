@@ -1,0 +1,138 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: helvetica;
+            background: #eee;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5em;
+        }
+
+        form {
+            margin-top: 2em;
+        }
+
+        .hide {
+            position: absolute;
+            left: -10000px;
+        }
+
+        label {
+            display: inline-block;
+            background: gray;
+            margin: 25px;
+            position: relative;
+            width: 100px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 2px;
+            font-size: 1em;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+        }
+
+        .targ-img {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            -webkit-transition: display 2s ease-out;
+            -moz-transition: display 2s ease-out;
+            -o-transition: display 2s ease-out;
+            transition: visibility 2s, opacity 2s linear;
+
+
+        }
+
+        .sad-c {
+
+            cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/sad.png"), auto;
+
+
+        }
+
+
+
+        #meh {
+            ~.option-meh {
+                cursor: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/meh.png"), auto;
+            }
+            &:checked~.option-meh {
+                background: orange;
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <img class="targ-img" id="targ-img" src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/9632/happy.png">
+    <form>
+        <h1>How are you feeling today?</h1>
+        <input class="hide" type="checkbox" title="Happy" name="happy" id="happy">
+        <label for="happy" class="option-happy">Happy</label>
+
+        <input class="hide" type="checkbox" title="Sad" name="sad" id="sad">
+        <label for="sad" class="option-sad">Sad</label>
+
+        <input class="hide" type="checkbox" title="Meh" name="meh" id="meh">
+        <label for="meh" class="option-meh">Meh</label>
+    </form>
+</body>
+
+<script>
+    (function (mouseStopDelay) {
+        var timeout;
+        document.addEventListener('mousemove', function (e) {
+            console.log('custom mousemove called');
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                var event = new CustomEvent("mousestop", {
+                    detail: {
+                        clientX: e.clientX,
+                        clientY: e.clientY
+                    },
+                    bubbles: true,
+                    cancelable: true
+                });
+                e.target.dispatchEvent(event);
+            }, mouseStopDelay);
+        });
+    }(1000));
+
+    document.body.style.position = 'relative';
+    window.document.body.addEventListener("mousemove", function (evt) {
+        //document.body.classList.add('sad-c');
+        //document.body.classList.remove('happy-c');
+        /* when you need to wait */
+        var target = document.getElementById('targ-img');
+        target.style.visibility = 'visible';
+        target.style.opacity = 0.75;
+        console.log('evt.clientX-' + evt.clientX);
+        console.log('********');
+        console.log('evt.clientY-' + evt.clientY);
+        target.style.left = evt.clientX + 'px';
+        target.style.top = evt.clientY + 'px';
+        /* to remove the wait state */
+
+
+    });
+    window.document.body.addEventListener("mousestop", function () {
+        console.log('mousestop called');
+        var target = document.getElementById('targ-img');
+        target.style.visibility = 'hidden';
+        target.style.opacity = 0;
+        //document.body.classList.add('happy-c');
+        //document.body.classList.remove('sad-c');
+
+    });
+</script>
+
+
+</html>
